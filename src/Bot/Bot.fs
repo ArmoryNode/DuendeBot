@@ -4,8 +4,6 @@ open DSharpPlus
 open DSharpPlus.Entities
 open DSharpPlus.SlashCommands
 open Microsoft.Extensions.Logging
-open System.Threading
-open CommandLine.Display
 
 type BotSlashCommands() =
     inherit ApplicationCommandModule()

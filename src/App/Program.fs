@@ -18,14 +18,20 @@ let main args =
 
         Async.Start(DisplayProgressIndicator "Starting bot", cts.Token)
 
-        do! InitializeBot botToken
+        let! taskResult = 
+            InitializeBot botToken 
             |> Async.AwaitTask
+            |> Async.Catch
 
-        cts.Cancel()
-
-        PrintSuccessMessage "Bot successfully started"
-
-        do! DisplayStandbyIndicator "Bot running..."
+        match taskResult with
+        | Choice2Of2 exn -> 
+            PrintFailureMessage "Failed to start bot"
+            raise exn
+        | Choice1Of2 _ ->
+            cts.Cancel()
+            PrintSuccessMessage "Bot successfully started"
+            do! DisplayStandbyIndicator "Bot running..."
+            
     }
     |> Async.RunSynchronously
     0
